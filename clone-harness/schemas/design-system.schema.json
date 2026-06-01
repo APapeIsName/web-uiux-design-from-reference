@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "clone-harness/design-system",
+  "title": "design-system.json — 토큰, 객관 비교의 진실 원천",
+  "type": "object",
+  "required": ["color", "type", "space", "radius"],
+  "additionalProperties": true,
+  "properties": {
+    "color": {
+      "type": "object",
+      "description": "용도별 색 그룹. 값은 모두 색 문자열(#hex 또는 rgb()).",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "minProperties": 1,
+        "additionalProperties": { "$ref": "#/$defs/colorValue" }
+      }
+    },
+    "type": {
+      "type": "object",
+      "required": ["family", "size"],
+      "additionalProperties": true,
+      "properties": {
+        "family": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "type": "string" }
+        },
+        "size": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "$ref": "#/$defs/lengthPx" }
+        },
+        "weight": {
+          "type": "object",
+          "additionalProperties": { "type": ["number", "string"] }
+        },
+        "leading": {
+          "type": "object",
+          "additionalProperties": { "type": ["number", "string"] }
+        }
+      }
+    },
+    "space": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/$defs/lengthPx" }
+    },
+    "radius": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": "string" }
+    }
+  },
+  "$defs": {
+    "colorValue": {
+      "type": "string",
+      "pattern": "^(#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})|rgba?\\([^)]*\\)|transparent)$"
+    },
+    "lengthPx": {
+      "type": "string",
+      "pattern": "^-?[0-9.]+(px|rem|em|%)$"
+    }
+  }
+}

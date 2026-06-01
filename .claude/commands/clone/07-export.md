@@ -1,0 +1,16 @@
+---
+description: 납품 — 카페24 삽입용 조각 export + 재채점("채점한 것 = 올리는 것")
+argument-hint: <run-name>
+---
+납품 단계: dev 와 납품을 가른다(원칙 1-5). export 는 정보를 변형하고 그 변형이 채점 대상을 바꾸므로,
+"채점한 것 = 올리는 것"을 별도로 닫는다.
+
+1. `npm run loop -- $ARGUMENTS --audit` 실행 →
+   - `export`: `src/` → `dist/fragment.html`(납품본, 기본은 data 속성 보존) + `dist/fragment.audit.html`(재채점본, data-component 보존).
+     CSS 는 tokens→styles 순서로 인라인, 전역 셀렉터는 `.clone-root` 하위로 강제 스코프.
+     CSS 를 클래스 기반으로 옮긴 경우에만 `npm run export -- $ARGUMENTS --strip` 으로 data 속성 제거(아니면 가드가 막는다).
+   - 그다음 `dist/fragment.audit.html` 을 렌더해 **마지막 재채점**. 납품본에서 점수가 하락하면 export 변환이 무언가 바꾼 것.
+2. 통과하면 `dist/fragment.html` 을 카페24 에디터에 붙인다.
+   - 에디터가 `<script>`/data 속성을 살려주는지 사전 "2분 테스트". script 잘리면 인라인, 그래도 안 되면 CSS-only 후퇴.
+
+이게 마지막 게이트. 재채점이 통과해야 납품한다.

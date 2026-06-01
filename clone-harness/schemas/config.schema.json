@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "clone-harness/config",
+  "title": "config.json — 엔진/실행 정책 (신호 레지스트리, 종료조건, 판단자 정체 기준)",
+  "type": "object",
+  "required": ["viewport", "maxIterations", "defaultThreshold", "defaultWeights", "signals", "judge"],
+  "additionalProperties": true,
+  "properties": {
+    "viewport": {
+      "type": "object",
+      "required": ["width", "height"],
+      "additionalProperties": false,
+      "properties": {
+        "width": { "type": "integer", "minimum": 1 },
+        "height": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "maxIterations": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "종료 조건. 데이터지 판단자 재량 아님(DESIGN 4-3)."
+    },
+    "defaultThreshold": { "type": "number", "minimum": 0, "maximum": 1 },
+    "defaultWeights": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "layout": { "type": "number", "minimum": 0 },
+        "color": { "type": "number", "minimum": 0 },
+        "typography": { "type": "number", "minimum": 0 },
+        "pixel": { "type": "number", "minimum": 0 },
+        "visual": { "type": "number", "minimum": 0 }
+      }
+    },
+    "signals": {
+      "type": "object",
+      "description": "신호 모듈 단일 레지스트리 = 플러그인 이음새가 사는 곳(DESIGN 5).",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["module", "enabled"],
+        "additionalProperties": true,
+        "properties": {
+          "module": { "type": "string", "description": "엔진 루트 기준 상대 경로" },
+          "enabled": { "type": "boolean" },
+          "model": { "type": "string", "description": "멀티모달 신호용 모델 id (재사용 이음새)" },
+          "maxDeltaE": { "type": "number", "description": "색 신호: deltaE→점수 매핑 분모" }
+        }
+      }
+    },
+    "judge": {
+      "type": "object",
+      "required": ["stallWindow", "minDelta"],
+      "additionalProperties": false,
+      "properties": {
+        "stallWindow": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "최근 N 회차 개선폭이 모두 minDelta 미만이면 정체."
+        },
+        "minDelta": {
+          "type": "number",
+          "minimum": 0,
+          "description": "유효 진전으로 칠 최소 aggregate 개선폭. 시각 jitter 보다 위로."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "color": {
+    "bg":    { "page": "#FFFFFF", "surface": "#0E0E10" },
+    "text":  { "primary": "#111111", "muted": "#6B7280" },
+    "brand": { "primary": "#2F6BFF", "accent": "#FF5C39" }
+  },
+  "type": {
+    "family":  { "heading": "'Pretendard', sans-serif", "body": "'Pretendard', sans-serif" },
+    "size":    { "h1": "48px", "h2": "32px", "body": "16px", "caption": "13px" },
+    "weight":  { "regular": 400, "bold": 700 },
+    "leading": { "tight": 1.1, "normal": 1.5 }
+  },
+  "space":  { "xs": "4px", "sm": "8px", "md": "16px", "lg": "32px", "xl": "64px" },
+  "radius": { "sm": "4px", "md": "12px", "pill": "999px" }
+}

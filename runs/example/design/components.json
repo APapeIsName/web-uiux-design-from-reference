@@ -1,0 +1,30 @@
+{
+  "components": [
+    {
+      "id": "header",
+      "intent": "상단 고정 바. 로고 좌측, 주 내비 우측. 히어로 위 투명, 스크롤 후 solid.",
+      "expects": {
+        "layout": "로고와 내비가 양 끝 정렬, 높이 ~72px",
+        "hierarchy": "로고가 1차 초점, 내비는 2차",
+        "assert": [
+          { "target": "self", "metric": "h", "op": "~", "value": 72, "tol": 10 }
+        ]
+      },
+      "tokens": ["color.bg.surface", "type.family.heading"],
+      "scoring": {
+        "threshold": 0.85,
+        "weights": { "layout": 0.45, "color": 0.15, "typography": 0.2, "pixel": 0, "visual": 0.2 }
+      }
+    },
+    {
+      "id": "footer",
+      "intent": "다컬럼 링크 + 저작권. 정보 밀도 높고 시각 위계는 낮음.",
+      "expects": { "layout": "3~4 컬럼, 좌측 정렬" },
+      "tokens": ["color.text.muted", "type.size.caption"],
+      "scoring": {
+        "threshold": 0.7,
+        "weights": { "layout": 0.3, "color": 0.2, "typography": 0.2, "pixel": 0, "visual": 0.3 }
+      }
+    }
+  ]
+}

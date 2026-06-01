@@ -1,0 +1,18 @@
+node_modules/
+.env
+*.log
+
+# 생성물 (assemble / capture / score / export 가 매 회차 다시 만든다)
+runs/*/src/index.html
+runs/*/src/tokens.css
+runs/*/work/
+runs/*/dist/
+runs/*/design/preview.html
+
+# 제3자 레퍼런스 원본 캡처는 추적하지 않음 (우리 분석물 signals.json/brief.md/meta.json 만 추적)
+runs/*/reference/source*.png
+runs/*/reference/dom.html
+
+# 단, 예제 run 의 입력 자산은 추적한다 (위 패턴이 잡지 않음)
+!runs/example/design/
+!runs/example/src/components/

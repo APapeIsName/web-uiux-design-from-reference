@@ -1,0 +1,112 @@
+{
+  "components": [
+    {
+      "id": "utility-bar",
+      "intent": "헤더 위 얇은 상단 띠. 좌측 실시간 인기검색어 롤링(랭크 숫자 + 키워드). 우측 고객센터·앱·언어 링크. 저위계 micro 캡션, 옅은 회색 배경. 원본 최상단 유틸바 재해석.",
+      "expects": {
+        "layout": "1행 양 끝 정렬, 높이 ~34px. 좌측 인기검색어, 우측 보조 링크 묶음.",
+        "hierarchy": "전체 저위계(micro). 랭크 숫자만 살짝 강조.",
+        "roles": "search-rank(숫자), search-keyword(키워드), util-link",
+        "assert": [{ "target": "self", "metric": "h", "op": "~", "value": 34, "tol": 14 }]
+      },
+      "tokens": ["color.bg.muted", "color.text.muted", "type.family.body", "type.size.micro"],
+      "scoring": { "threshold": 0.9, "weights": { "layout": 0.35, "color": 0.15, "typography": 0.15, "pixel": 0, "visual": 0.35 } }
+    },
+    {
+      "id": "header",
+      "intent": "기능 밀도 높은 커머스 헤더(SaaS 랜딩 헤더 금지). 메인행: 로고 좌 + pill 검색바(인기검색어 랭크/키워드 표시 + 원형 검색 버튼) 중앙 + 아이콘 액션군(최근/위시/장바구니+레드 카운트 배지)·회원가입|로그인 우. GNB행: 8~9 항목, 최소 2개는 아이콘/NEW닷 강조.",
+      "expects": {
+        "layout": "메인행 + GNB행 2행, 상/하단 divider 보더로 레이어드(평면 흰 박스 금지). 높이 ~120px.",
+        "hierarchy": "로고 1차, 검색바 2차, 아이콘 액션·GNB 3차. GNB 균일 플레인 텍스트 금지 — 일부 항목 아이콘/강조점으로 펀치.",
+        "roles": "logo, search, search-rank, search-keyword, search-submit(원형 아이콘 버튼), icon-action(최소 3), cart-badge(레드 카운트), auth-split, nav-item, nav-accent, nav-dot",
+        "assert": [{ "target": "self", "metric": "h", "op": "~", "value": 120, "tol": 34 }]
+      },
+      "tokens": ["color.bg.page", "color.text.primary", "color.brand.primary", "color.semantic.sale", "type.family.heading", "type.size.body"],
+      "scoring": { "threshold": 0.95, "weights": { "layout": 0.3, "color": 0.15, "typography": 0.15, "pixel": 0, "visual": 0.4 } }
+    },
+    {
+      "id": "hero",
+      "intent": "메인 히어로 캐러셀(센터피스). 다크 그린 그라데이션 배경. 좌측: 다색·다굵기(extrabold/display) 헤드라인 + 강조워드 2종(그린 + 앰버/레드) + 프로모 오퍼 블록(구매조건+증정/혜택+할인율 배지) + 조건/기한 fineprint + CTA + 신뢰 칩(인증·성분). 우측: 제품 실사 합성 2~3개(빈 도형 금지, 우반부 70%+ 채움, 그림자 깊이). 하단 캐러셀 도트. 건강식품 재해석: 정기구독 첫 달 혜택/사은품 증정.",
+      "expects": {
+        "layout": "좌 카피·오퍼·fineprint / 우 제품 합성(우반부 대부분 채움) / 배경 장식 / 하단 페이지네이션. 빈 영역 최소화(미니멀 회귀 금지). 높이 ~480px.",
+        "hierarchy": "헤드라인이 압도적 1차(display 56px, extrabold 800). 제품 실사가 헤드라인과 동급 시각무게. CTA 2차. fineprint 최저위계.",
+        "roles": "headline, headline-accent(다색 span), offer-badge, condition, fineprint, cta, product-photo(2~3, 겹침), trust-chip, decor, pagination(도트), arrow",
+        "assert": [{ "target": "self", "metric": "h", "op": "~", "value": 480, "tol": 90 }]
+      },
+      "tokens": ["color.bg.surface", "color.text.inverse", "color.text.invfaint", "color.brand.primarylight", "color.semantic.promo", "type.family.heading", "type.size.display"],
+      "scoring": { "threshold": 0.95, "weights": { "layout": 0.2, "color": 0.15, "typography": 0.15, "pixel": 0, "visual": 0.5 } }
+    },
+    {
+      "id": "category",
+      "intent": "원형 카테고리 퀵메뉴 10~12개(가로 스크롤 허용). 원형 썸네일은 실사 제품/성분 이미지(이모지 폴백 가능하나 회색 모노 원 금지 — 플레이스홀더도 brand 틴트 그라데이션으로 색감). 라벨 캡션.",
+      "expects": {
+        "layout": "가로 1행 10~12 아이템 균등, 각 아이템 원형 썸네일 위 + 라벨 아래. 높이 ~160px.",
+        "hierarchy": "아이템 병렬 평등.",
+        "roles": "item, thumb(이미지/틴트), label",
+        "assert": [{ "target": "self", "metric": "h", "op": "~", "value": 160, "tol": 55 }]
+      },
+      "tokens": ["color.bg.page", "color.bg.thumb", "color.text.primary", "color.brand.primary", "type.family.body", "type.size.caption"],
+      "scoring": { "threshold": 0.92, "weights": { "layout": 0.25, "color": 0.1, "typography": 0.15, "pixel": 0, "visual": 0.5 } }
+    },
+    {
+      "id": "product-grid",
+      "intent": "베스트 + 신상품 두 섹션의 고밀도 상품 그리드. 섹션마다 헤더(타이틀+더보기) + 5열 카드 8~10개. 카드: 실사 1:1 썸네일(회색 빈박스 금지) + 종류별 색 배지(SALE 레드/한정 앰버/신상품·정기구독 그린) + 할인율(예 34%↓) + 상품명 + 효능 라벨 + 정가 취소선·판매가(그린). 원본의 반복·볼륨·프로모 에너지 재해석.",
+      "expects": {
+        "layout": "섹션 2개(베스트/신상품), 각 5열 그리드(gridgap 16). 카드 균등·좌상단 정렬, 카드 내부 세로(썸네일→배지→이름→가격).",
+        "hierarchy": "상품명·판매가 카드 내 1차. SALE/할인율 배지로 긴급성·프로모. 배지 색 종류별 분기(단색 pill 반복 금지).",
+        "roles": "section-title, more, card, thumb(실사), sale-badge(레드), discount-rate, coupon-badge, effect-label, product-name, price(정가 취소선+판매가)",
+        "assert": [{ "target": "self", "metric": "h", "op": ">", "value": 700 }]
+      },
+      "tokens": ["color.bg.page", "color.bg.thumb", "color.text.primary", "color.text.muted", "color.brand.primary", "color.semantic.sale", "color.semantic.promo", "type.size.body", "type.size.caption"],
+      "scoring": { "threshold": 0.95, "weights": { "layout": 0.25, "color": 0.15, "typography": 0.1, "pixel": 0, "visual": 0.5 } }
+    },
+    {
+      "id": "promo-banner",
+      "intent": "그리드 사이 가로 풀폭 프로모 배너. 다크 그라데이션 배경 + 굵은 카피(h2) + 보조 카피 + CTA. 정기구독/첫구매 혜택/시즌 프로모. 페이지 전체 프로모 텐션 유지.",
+      "expects": {
+        "layout": "풀폭 띠, 좌 카피 + 우 CTA(또는 비주얼). 높이 ~180px.",
+        "hierarchy": "카피 1차, CTA 2차.",
+        "roles": "headline, sub, cta, visual",
+        "assert": [{ "target": "self", "metric": "h", "op": "~", "value": 180, "tol": 70 }]
+      },
+      "tokens": ["color.bg.surface", "color.text.inverse", "color.brand.primarylight", "color.semantic.promo", "type.family.heading", "type.size.h2"],
+      "scoring": { "threshold": 0.9, "weights": { "layout": 0.25, "color": 0.15, "typography": 0.15, "pixel": 0, "visual": 0.45 } }
+    },
+    {
+      "id": "grid-subscription",
+      "intent": "정기구독 추천 그리드 섹션. 5열 카드 8~10개. 정기구독 그린 배지 + 구독가/절약액 강조. 베스트 그리드와 시각 리듬 통일하되 '정기구독' 메시지로 차별.",
+      "expects": {
+        "layout": "섹션 헤더 + 5열 그리드(gridgap 16). 카드 내부 세로 정렬.",
+        "hierarchy": "구독가·절약액 1차, 효능/주기 2차.",
+        "roles": "section-title, card, thumb(실사), sub-badge(정기구독 그린), product-name, price, save-amount",
+        "assert": [{ "target": "self", "metric": "h", "op": ">", "value": 360 }]
+      },
+      "tokens": ["color.bg.muted", "color.text.primary", "color.text.muted", "color.brand.primary", "color.semantic.new", "type.size.body", "type.size.caption"],
+      "scoring": { "threshold": 0.92, "weights": { "layout": 0.25, "color": 0.15, "typography": 0.1, "pixel": 0, "visual": 0.5 } }
+    },
+    {
+      "id": "footer",
+      "intent": "다크 그린 푸터. 다컬럼 링크(고객센터/쇼핑/회사/약관) + SNS 아이콘 행 + 결제수단·에스크로 배지 행 + 사업자정보 다줄 + 저작권. 정보 밀도 높고 시각 위계 낮음. 비어 보임 금지.",
+      "expects": {
+        "layout": "4 컬럼 링크 + 하단 SNS/결제배지/사업자정보 다줄. 좌측 정렬. 높이 ~360px+.",
+        "hierarchy": "저위계·균질, 컬럼 헤더만 약간 강조.",
+        "roles": "col, sns-row, payment-badges, biz-info, copyright",
+        "assert": [{ "target": "self", "metric": "h", "op": ">", "value": 320 }]
+      },
+      "tokens": ["color.bg.surface", "color.text.invmuted", "color.text.invfaint", "type.family.body", "type.size.caption"],
+      "scoring": { "threshold": 0.9, "weights": { "layout": 0.3, "color": 0.2, "typography": 0.15, "pixel": 0, "visual": 0.35 } }
+    },
+    {
+      "id": "floating-actions",
+      "intent": "우하단 고정 세로 버튼 스택. 상담/채팅(그린) + 정기구독·이벤트(앰버 promo) + 맨위로 화살표. 원형, 그림자 부유감. 원본 우측 플로팅 위젯군의 기능감 재해석.",
+      "expects": {
+        "layout": "세로 스택, 원형 버튼 3~4개. (실제 페이지에선 fixed, 캡처 시 static)",
+        "hierarchy": "상담/구독 강조, 맨위로 보조.",
+        "roles": "fab-chat, fab-promo, fab-top",
+        "assert": [{ "target": "self", "metric": "h", "op": ">", "value": 150 }]
+      },
+      "tokens": ["color.brand.primary", "color.semantic.promo", "color.text.inverse", "type.size.caption"],
+      "scoring": { "threshold": 0.9, "weights": { "layout": 0.35, "color": 0.2, "typography": 0.1, "pixel": 0, "visual": 0.35 } }
+    }
+  ]
+}

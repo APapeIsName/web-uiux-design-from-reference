@@ -1,0 +1,30 @@
+{
+  "name": "clone-harness",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "레퍼런스를 분석·재해석해 디자인을 도출하고 순수 HTML/CSS/JS로 구현한 뒤, AI 채점기와 결정론적 루프로 디자인 의도 충실도를 반복 측정·수렴시키는 재사용 하네스",
+  "engines": {
+    "node": ">=22.9.0"
+  },
+  "scripts": {
+    "assemble": "node clone-harness/scripts/assemble.mjs",
+    "serve": "node clone-harness/scripts/serve.mjs",
+    "capture": "node --env-file-if-exists=.env clone-harness/scripts/capture.mjs",
+    "score": "node --env-file-if-exists=.env clone-harness/scripts/score.mjs",
+    "export": "node clone-harness/scripts/export.mjs",
+    "loop": "node --env-file-if-exists=.env clone-harness/judge/loop.mjs",
+    "validate": "node clone-harness/lib/validate.mjs",
+    "new-run": "node clone-harness/scripts/new-run.mjs",
+    "design-preview": "node clone-harness/scripts/design-preview.mjs",
+    "sync-commands": "mkdir -p .claude/commands/clone && cp clone-harness/commands/*.md .claude/commands/clone/"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "ajv": "^8.17.1",
+    "node-vibrant": "^4.0.3",
+    "pixelmatch": "^6.0.0",
+    "playwright": "^1.49.0",
+    "pngjs": "^7.0.0"
+  }
+}

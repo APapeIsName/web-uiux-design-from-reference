@@ -1,0 +1,91 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "clone-harness/components",
+  "title": "components.json — 척추. 배열이라 순서 보존(assemble concat 순서 = 풀페이지 흐름)",
+  "type": "object",
+  "required": ["components"],
+  "additionalProperties": false,
+  "properties": {
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/component" }
+    }
+  },
+  "$defs": {
+    "component": {
+      "type": "object",
+      "required": ["id", "intent"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "3중 계약: src/components/<id>.html 파일명 = data-component=\"<id>\" = 이 id",
+          "pattern": "^[a-z0-9][a-z0-9-]*$"
+        },
+        "intent": {
+          "type": "string",
+          "minLength": 1,
+          "description": "이 컴포넌트가 무엇이고 왜 그렇게 생겼는지. 시각 신호 입력."
+        },
+        "expects": {
+          "type": "object",
+          "description": "산문 기대치 + (옵션) assert 배열로 숫자 하드 게이트.",
+          "additionalProperties": true,
+          "properties": {
+            "assert": {
+              "type": "array",
+              "description": "레이아웃 신호가 결정론으로 거는 숫자 단언.",
+              "items": { "$ref": "#/$defs/assertion" }
+            }
+          }
+        },
+        "tokens": {
+          "type": "array",
+          "description": "이 컴포넌트가 쓰는 토큰 도트경로. 색·타이포 신호의 정답지.",
+          "items": { "type": "string", "pattern": "^[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)*$" }
+        },
+        "selector": {
+          "type": "string",
+          "description": "엣지케이스용 override. 기본은 [data-component=\"<id>\"]."
+        },
+        "scoring": { "$ref": "#/$defs/scoring" }
+      }
+    },
+    "scoring": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "threshold": { "type": "number", "minimum": 0, "maximum": 1 },
+        "weights": { "$ref": "#/$defs/weights" }
+      }
+    },
+    "weights": {
+      "type": "object",
+      "description": "신호별 가중치. 0 = 그 신호 끔. 합≠1 이면 집계기가 정규화.",
+      "additionalProperties": false,
+      "properties": {
+        "layout": { "type": "number", "minimum": 0 },
+        "color": { "type": "number", "minimum": 0 },
+        "typography": { "type": "number", "minimum": 0 },
+        "pixel": { "type": "number", "minimum": 0 },
+        "visual": { "type": "number", "minimum": 0 }
+      }
+    },
+    "assertion": {
+      "type": "object",
+      "required": ["metric", "op", "value"],
+      "additionalProperties": false,
+      "properties": {
+        "target": {
+          "description": "'self' | data-role 문자열 | 자식 인덱스(number). 기본 'self'.",
+          "type": ["string", "number"]
+        },
+        "metric": { "type": "string", "enum": ["w", "h", "x", "y"] },
+        "op": { "type": "string", "enum": ["~", "<", ">", "<=", ">=", "=="] },
+        "value": { "type": "number" },
+        "tol": { "type": "number", "minimum": 0, "description": "허용 오차(px). op '~' 기본 8, op '==' 기본 0." }
+      }
+    }
+  }
+}

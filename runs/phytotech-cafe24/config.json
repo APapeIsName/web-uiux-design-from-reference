@@ -1,0 +1,14 @@
+{
+  "viewport": { "width": 1440, "height": 900 },
+  "maxIterations": 12,
+  "defaultThreshold": 0.92,
+  "defaultWeights": { "layout": 0.3, "color": 0.15, "typography": 0.15, "pixel": 0, "visual": 0.4 },
+  "signals": {
+    "layout":     { "module": "signals/layout.mjs", "enabled": true },
+    "color":      { "module": "signals/color.mjs",  "enabled": true, "maxDeltaE": 50 },
+    "typography": { "module": "signals/typo.mjs",   "enabled": true },
+    "pixel":      { "module": "signals/pixel.mjs",  "enabled": false },
+    "visual":     { "module": "signals/visual.mjs", "enabled": true, "provider": "agent", "model": "claude-sonnet-4-6" }
+  },
+  "judge": { "stallWindow": 3, "minDelta": 0.01 }
+}

@@ -1,0 +1,77 @@
+/* .clone-root 스코프 안에서만. 토큰은 var(--...) 로 참조. tokens.css 가 .clone-root 에 변수를 깐다. */
+
+.clone-root {
+  margin: 0;
+}
+
+/* ── header ──────────────────────────────────────────
+   position:fixed 대신 sticky 사용 — fixed 는 자리를 차지 안 해
+   box 높이가 0 으로 잡히는 캡처 함정(DESIGN 6)을 피하려는 의도적 선택. */
+[data-component="header"] {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+  padding: 0 var(--space-lg);
+  background: var(--color-bg-surface);
+  font-family: var(--type-family-heading);
+}
+[data-component="header"] .logo {
+  color: #ffffff;
+  font-family: var(--type-family-heading);
+  font-size: var(--type-size-h2);
+  font-weight: var(--type-weight-bold);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+}
+[data-component="header"] nav {
+  display: flex;
+  gap: var(--space-md);
+}
+[data-component="header"] nav a {
+  color: var(--color-text-muted);
+  font-family: var(--type-family-heading);
+  font-size: var(--type-size-body);
+  text-decoration: none;
+}
+[data-component="header"].is-solid {
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* ── footer ──────────────────────────────────────────
+   정보 밀도 높고 시각 위계 낮음 — caption 크기, muted 색. */
+[data-component="footer"] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-lg);
+  padding: var(--space-xl) var(--space-lg);
+  background: var(--color-bg-page);
+  color: var(--color-text-muted);
+  font-family: var(--type-family-body);
+  font-size: var(--type-size-caption);
+  line-height: var(--type-leading-normal);
+}
+[data-component="footer"] .col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+[data-component="footer"] h4 {
+  margin: 0 0 var(--space-sm);
+  color: var(--color-text-primary);
+  font-family: var(--type-family-heading);
+  font-size: var(--type-size-body);
+}
+[data-component="footer"] a {
+  color: var(--color-text-muted);
+  font-size: var(--type-size-caption);
+  text-decoration: none;
+}
+[data-component="footer"] .copy {
+  width: 100%;
+  margin: var(--space-md) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--type-size-caption);
+}

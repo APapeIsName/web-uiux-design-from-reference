@@ -1,0 +1,26 @@
+{
+  "color": {
+    "bg": { "page": "#FFFFFF", "surface": "#0E2A1E", "muted": "#F4F7F4", "thumb": "#EAF1EC" },
+    "text": { "primary": "#111511", "muted": "#6B7280", "inverse": "#FFFFFF", "invmuted": "#A7B5AC", "invfaint": "#7C8C82" },
+    "brand": { "primary": "#16A34A", "primarylight": "#22C55E", "dark": "#0E5A33", "deeper": "#0A1F16" },
+    "semantic": { "sale": "#E03A3A", "salebg": "#FDECEC", "promo": "#F5A623", "promobg": "#FEF3E2", "new": "#16A34A", "newbg": "#E7F6EC", "highlight": "#FDE68A" },
+    "border": { "default": "#E6EAE6" }
+  },
+  "type": {
+    "family": { "heading": "'Pretendard', sans-serif", "body": "'Pretendard', sans-serif" },
+    "size": { "display": "56px", "h1": "40px", "h2": "26px", "h3": "18px", "body": "15px", "sm": "13px", "caption": "12px", "micro": "11px" },
+    "weight": { "regular": 400, "medium": 500, "bold": 700, "extrabold": 800 },
+    "leading": { "tight": 1.1, "normal": 1.6 }
+  },
+  "space": { "xs": "4px", "sm": "8px", "md": "16px", "lg": "24px", "xl": "48px", "section": "56px", "gridgap": "16px", "cardgap": "12px" },
+  "radius": { "sm": "6px", "md": "12px", "card": "16px", "lg": "20px", "pill": "999px" },
+  "shadow": {
+    "sm": "0 1px 3px rgba(0,0,0,0.08)",
+    "card": "0 4px 16px rgba(0,0,0,0.08)",
+    "float": "0 6px 20px rgba(0,0,0,0.18)",
+    "product": "0 24px 48px rgba(0,0,0,0.35)",
+    "modal": "0 20px 60px rgba(0,0,0,0.25)"
+  },
+  "gradient": { "hero": "linear-gradient(135deg, #0E2A1E 0%, #0A1F16 100%)" },
+  "z": { "float": 1000, "modal": 1100 }
+}
