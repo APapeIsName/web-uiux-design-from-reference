@@ -7,6 +7,12 @@
 
 > **레퍼런스 사이트 → 디자인 분석·재해석 → HTML/CSS 구현 → AI가 "잘 맞는지" 점수 매겨 반복 수정 → 카페24용 HTML 조각**
 
+<p align="center">
+  <img src="docs/preview-fold.png" alt="PHYTOTECH 예제 — autowash.co.kr UI/UX를 건강기능식품 브랜드로 재해석" width="840">
+  <br>
+  <em>예제 결과: 자동차용품몰 autowash.co.kr 의 UI/UX 느낌을 가상 건강기능식품 브랜드 PHYTOTECH 로 재해석</em>
+</p>
+
 - 🎨 **베끼는 게 아닙니다.** 픽셀을 그대로 복제하는 게 아니라, 레이아웃·색·타이포·정보 밀도 같은 *느낌*을 가져와 **다른 브랜드로 재해석**합니다.
 - 🧩 **프론트엔드 전용.** 백엔드·DB 없음. 보이는 화면과 동작(스크롤·캐러셀 등)까지만.
 - 🔁 **"감"이 아니라 점수로 수렴.** AI가 매 컴포넌트를 0~1로 채점하고, 기준 점수에 도달하거나 최대 횟수에 닿을 때까지 자동 반복합니다.
@@ -41,6 +47,13 @@ npm install
 npx playwright install chromium
 npm run serve -- phytotech-cafe24      # → http://127.0.0.1:4173 (완성 페이지)
 ```
+
+<details>
+<summary>📄 전체 페이지 한 장으로 보기 (스크롤 길이)</summary>
+
+<p align="center"><img src="docs/preview-full.png" alt="PHYTOTECH 전체 페이지" width="420"></p>
+
+</details>
 
 띄워진 페이지에서 스크롤(헤더 그림자), 히어로 배너 도트, 상품 카드 클릭(장바구니 담기), 맨위로 버튼 등이 **실제로 동작**합니다.
 구성: 상단바 · 헤더(검색/아이콘) · 히어로 캐러셀 · 카테고리 · 상품 그리드 2종 · 프로모 배너 · 푸터 · 플로팅 버튼.
