@@ -1,199 +1,165 @@
-# clone-harness
+# web-uiux-design-from-reference
 
-레퍼런스를 **분석·재해석**해 디자인을 도출하고, 순수 HTML/CSS/JS 로 구현한 뒤,
-AI 채점기와 **결정론적 루프**로 "디자인 의도에 얼마나 충실한가"를 반복 측정해 수렴시키는
-재사용 가능한 시스템. 최종 산출물은 카페24 에디터에 직접 삽입하는 **HTML 조각**.
+**참고할 웹사이트를 주면, 그 UI/UX 느낌을 분석·재해석해 새 브랜드용 웹페이지로 만들어 주는 도구입니다.**
+결과물은 [카페24](https://www.cafe24.com/) 에디터에 바로 붙일 수 있는 HTML 조각입니다.
 
-> 무한 반복은 그 자체로 수렴을 보장하지 않는다. 수렴하려면 (1) "지금 얼마나 가까운지"를 재는
-> 오라클과 (2) 종료 조건이 필요하다. 이 시스템은 그 둘을 명시적으로 갖춘다.
->
-> 설계 근거 전체는 [`DESIGN.md`](./DESIGN.md). 이 README 는 실행 방법.
+작동 흐름을 한 줄로:
+
+> **레퍼런스 사이트 → 디자인 분석·재해석 → HTML/CSS 구현 → AI가 "잘 맞는지" 점수 매겨 반복 수정 → 카페24용 HTML 조각**
+
+- 🎨 **베끼는 게 아닙니다.** 픽셀을 그대로 복제하는 게 아니라, 레이아웃·색·타이포·정보 밀도 같은 *느낌*을 가져와 **다른 브랜드로 재해석**합니다.
+- 🧩 **프론트엔드 전용.** 백엔드·DB 없음. 보이는 화면과 동작(스크롤·캐러셀 등)까지만.
+- 🔁 **"감"이 아니라 점수로 수렴.** AI가 매 컴포넌트를 0~1로 채점하고, 기준 점수에 도달하거나 최대 횟수에 닿을 때까지 자동 반복합니다.
 
 ---
 
-## 이 저장소에 담긴 것
+## ⚠️ 먼저 알아둘 것 — 이건 "버튼 하나로 뽑는 자동 생성기"가 아닙니다
 
-| 경로 | 내용 |
+이 저장소는 **[Claude Code](https://docs.claude.com/claude-code)(AI 에이전트) 안에서 단계별로 진행하는 워크플로**입니다.
+
+| 누가 | 무엇을 |
 |---|---|
-| `clone-harness/` | **재사용 엔진** — 스크립트·신호 플러그인·판단자·스키마·커맨드 |
-| `runs/example/` | 최소 동작 예제(header + footer). 오프라인 스모크용 |
-| `runs/phytotech-cafe24/` | **완결 예제** — 레퍼런스([autowash.co.kr](https://autowash.co.kr/))의 UI/UX 를 가상 건강기능식품 브랜드 *PHYTOTECH* 로 재해석. 9개 컴포넌트 풀 페이지 + 프론트 인터랙션 |
-| `DESIGN.md` | 설계 문서(원칙·계약·파이프라인) |
+| **AI 에이전트** (Claude Code) | 디자인 도출, HTML/CSS 구현, "디자인 의도에 맞는지" 시각 채점, 수정 |
+| **자동 스크립트** (`npm run …`) | 조각 합치기, 스크린샷 캡처, 점수 집계, 다음 행동 결정, export |
+| **사람(당신)** | 두 번의 게이트에서 확인·결정 (디자인 OK? / 구현 OK?) |
 
-`runs/*` 는 **예제로 그대로 둔다.** 실제 작업은 `npm run new-run -- <name>` 으로 새 인스턴스를 만들어 진행한다.
+즉, `git clone` 후 `npm install`만 한다고 사이트가 뚝딱 나오지 않습니다. **Claude Code에서 슬래시 커맨드(`/clone:01-reference` …)를 따라가며** 함께 만듭니다. 순수 명령줄로 자동 실행되는 건 "측정/채점/조립" 같은 기계적 부분뿐입니다.
 
----
-
-## 핵심 원칙 (코드에 박힘)
-
-- **측정과 결정을 분리한다.** 채점기(`scripts/score.mjs`)는 측정만, 판단자(`judge/route.mjs`)는 흐름만 결정.
-  종료 조건(임계치·최대회차)은 데이터지 AI 재량이 아니다.
-- **비교 기준은 원본이 아니라 도출된 디자인.** 루프는 `reference/` 가 아니라 `design/` 과 비교한다(베끼기 회귀 방지).
-- **컴포넌트 경계가 전 단계를 묶는 계약.** `id` = `src/components/<id>.html` = `data-component="<id>"` (3중 계약).
-- **엔진과 실행을 가른다.** `clone-harness/`(재사용) vs `runs/<name>/`(일회성).
-- **dev 와 납품을 가른다.** 마지막 재채점은 `src/` 가 아니라 export 된 `dist/fragment.audit.html` 로 — "채점한 것 = 올리는 것".
+> AI 채점도 **기본은 Claude Code가 직접** 합니다 — **별도 API 키가 필요 없습니다.** (원한다면 Anthropic API 키로 완전 자동화도 가능)
 
 ---
 
-## 설치
+## 결과 미리보기
+
+이 저장소에는 **완성된 예제**가 들어 있습니다: `runs/phytotech-cafe24/`
+— 자동차용품 쇼핑몰 [autowash.co.kr](https://autowash.co.kr/) 의 UI/UX를, 가상의 건강기능식품 브랜드 **PHYTOTECH** 로 재해석한 풀 페이지입니다.
+
+직접 브라우저로 보려면:
 
 ```bash
 npm install
-npx playwright install chromium      # 캡처용 브라우저
+npx playwright install chromium
+npm run serve -- phytotech-cafe24      # → http://127.0.0.1:4173 (완성 페이지)
 ```
 
-- 요구사항: **Node ≥ 22.9** (`--env-file-if-exists` 사용).
-- 시각 채점은 기본이 `provider:"agent"` (Claude Code 가 직접 채점, **API 키 불필요**).
-  완전 자율(CI/크론)로 돌리려면 `provider:"api"` 로 두고 `cp .env.example .env` 후 `ANTHROPIC_API_KEY` 입력.
+띄워진 페이지에서 스크롤(헤더 그림자), 히어로 배너 도트, 상품 카드 클릭(장바구니 담기), 맨위로 버튼 등이 **실제로 동작**합니다.
+구성: 상단바 · 헤더(검색/아이콘) · 히어로 캐러셀 · 카테고리 · 상품 그리드 2종 · 프로모 배너 · 푸터 · 플로팅 버튼.
 
 ---
 
-## 빠른 시작
+## 빠른 체험 (Claude Code 없이, 5분)
+
+Claude Code가 없어도 "기계적 부분"은 직접 돌려볼 수 있습니다.
 
 ```bash
-# 1) 결정론 신호만으로 한 바퀴(오프라인, 키 불필요)
+npm install
+npx playwright install chromium
+
+# 1) 최소 예제 한 바퀴 (스크린샷 캡처 → 점수 → 다음 행동 결정)
 npm run loop -- example
 
-# 2) 완결 예제를 브라우저로 보기
-npm run serve -- phytotech-cafe24            # → http://127.0.0.1:4173  (전체 페이지)
-npm run serve -- phytotech-cafe24 root 4174  # → http://127.0.0.1:4174/design/preview.html (디자인 스펙 시트)
+# 2) 완성 예제 보기
+npm run serve -- phytotech-cafe24            # http://127.0.0.1:4173 (페이지)
+npm run serve -- phytotech-cafe24 root 4174  # http://127.0.0.1:4174/design/preview.html (디자인 명세서)
 ```
 
-`runs/example/` 는 visual 신호가 꺼져 있어 한 줄로 **assemble → capture → score → route** 를 돌고
-`advance` 까지 간다. `runs/phytotech-cafe24/` 는 visual `provider:"agent"` 라 아래 "시각 신호" 두 단계 흐름을 탄다.
+`example` 은 AI 채점을 끈 상태라 키·에이전트 없이 한 줄로 끝까지 돕니다.
 
 ---
 
-## 파이프라인 (사람은 게이트에서만 개입)
-
-| 단계 | 커맨드 | 내용 | 사람 |
-|---|---|---|---|
-| 1 | `/clone:01-reference` | 레퍼런스 수집 (제공 시 스킵) | - |
-| 2 | `/clone:02-design` | 토큰 + 컴포넌트 선언 도출 (`design/`) | - |
-| 2.5 | `/clone:02-review` | **design ↔ reference 충실도 게이트** + 사람 미리보기 | **게이트** |
-| 3 | `/clone:03-implement` | HTML 목업 + 컴포넌트 분할 (`src/`) | - |
-| 4 | `/clone:04-loop` | 컴포넌트별 유사도 루프 (수렴/타임아웃) | - |
-| 5 | `/clone:05-gate` | 분기: 재작업 vs 기능 구현 | **게이트** |
-| 6 | `/clone:06-interactions` | 프론트 인터랙션 (백엔드 없음) | 대화 |
-| 납품 | `/clone:07-export` | 카페24 조각 export + 재채점 | **게이트** |
-
-**두 종류의 게이트를 분리한다**: `02-review` 는 *"도출된 디자인이 원본의 본질을 담았나"*(홀리스틱),
-`04→05` 는 *"구현이 그 디자인에 수렴했나"*(결정론+시각). 이 둘을 한 게이트가 겸하면 얇은 디자인이 통과한다.
-
-### 새 프로젝트
+## 처음부터 새로 만들기 (Claude Code에서)
 
 ```bash
-npm run new-run -- mysite     # runs/mysite/ 골격 + 기본 config + 최소 유효 스텁
-# 이후 /clone:01-reference mysite → ... → /clone:07-export mysite
+npm run new-run -- mysite     # runs/mysite/ 뼈대 생성
 ```
+
+그다음 Claude Code에서 순서대로 진행합니다:
+
+| 단계 | 커맨드 | 하는 일 |
+|---|---|---|
+| 1 | `/clone:01-reference mysite` | 참고 사이트 캡처(스크린샷·구조 분석) |
+| 2 | `/clone:02-design mysite` | 색·글꼴·컴포넌트 등 **디자인 명세** 도출 |
+| 2.5 | `/clone:02-review mysite` | **이 디자인이 원본 느낌을 잘 담았나** 확인 (게이트) |
+| 3 | `/clone:03-implement mysite` | HTML/CSS로 구현 |
+| 4 | `/clone:04-loop mysite` | 컴포넌트별 점수 매겨 **자동 반복 수정** |
+| 5 | `/clone:05-gate mysite` | 결과 확인 → 다듬기 vs 진행 (게이트) |
+| 6 | `/clone:06-interactions mysite` | 스크롤·캐러셀 등 **동작** 추가 |
+| 7 | `/clone:07-export mysite` | **카페24용 HTML 조각** 뽑기 + 최종 점검 |
+
+(슬래시 커맨드는 `.claude/commands/clone/` 에 들어 있어, 이 저장소를 연 Claude Code에서 바로 뜹니다.)
 
 ---
 
-## 시각(visual) 신호 — 누가 채점하나
+## 무엇이 어디에 있나
 
-`config.signals.visual.provider` 로 교체한다(확장 이음새):
+```
+clone-harness/            # 재사용 엔진 (모든 프로젝트가 공유)
+├── scripts/              #   조립·서버·캡처·채점·export·레퍼런스 캡처·디자인 미리보기
+├── signals/              #   채점 항목들: 레이아웃·색·글꼴·픽셀·시각(AI)
+├── judge/                #   다음 행동 결정(자동 반복할지/사람 부를지) + 루프 진행
+├── schemas/              #   입력 파일 검증(JSON Schema)
+├── commands/             #   단계별 슬래시 커맨드 원본
+└── config.default.json   #   기본 설정(점수 기준·가중치 등)
 
-| provider | 채점 주체 | 키 | 흐름 |
-|---|---|---|---|
-| `"agent"` (기본) | **Claude Code 에이전트가 샷을 보고 채점** | 불필요 | capture → 에이전트가 `work/visual-grades.json` 작성 → score |
-| `"api"` | Anthropic SDK 자율 채점 | `ANTHROPIC_API_KEY` | `npm run loop` 단발 |
+runs/<이름>/              # 프로젝트 1개 = 폴더 1개
+├── reference/            #   1) 참고 사이트 분석 자료
+├── design/               #   2) 도출된 디자인 명세 (색·글꼴·컴포넌트)
+├── src/                  #   3) 실제 HTML/CSS/JS + 이미지(assets/)
+├── work/                 #   진행 중 산출물(스크린샷·점수 로그) — git 추적 안 함
+└── dist/                 #   4) 최종 카페24 조각 — git 추적 안 함
+```
 
-`"agent"` 일 때 루프는 두 단계로 나뉜다(중간에 에이전트가 채점):
+> `runs/example/`, `runs/phytotech-cafe24/` 는 **예제**로 그대로 둡니다. 새 작업은 `npm run new-run` 으로 만드세요.
+
+---
+
+## 자주 묻는 것
+
+**Q. API 키가 꼭 있어야 하나요?**
+아니요. 시각 채점은 기본적으로 Claude Code가 직접 합니다(키 불필요). 사람·에이전트 없이 완전 자동으로 돌리고 싶을 때만 `ANTHROPIC_API_KEY` 를 씁니다(`config` 에서 `provider:"api"`).
+
+**Q. 진짜 작동하는 쇼핑몰이 나오나요?**
+아니요. **프론트엔드 화면과 동작까지**입니다(백엔드·결제·DB 없음). 카페24 같은 호스팅 에디터에 붙여 쓰는 용도예요.
+
+**Q. 남의 사이트를 베끼는 건가요?**
+아니요. 픽셀 복제가 아니라 **UI/UX 패턴을 재해석**해 다른 브랜드로 다시 만드는 게 목적입니다. 레퍼런스의 원본 스크린샷·DOM은 분석용일 뿐, 저장소에 올리지 않습니다.
+
+**Q. 예제의 상품 이미지·아이콘은 어디서 왔나요?**
+무료 소스입니다 — 아이콘은 [Lucide](https://lucide.dev)([Iconify](https://iconify.design) 경유), 제품 이미지는 [Pollinations.ai](https://pollinations.ai) 로 생성해 `src/assets/` 에 저장. **실제 상업 운영 전에는 진짜 제품 사진으로 교체하세요**(슬롯은 그대로, 이미지 주소만 바꾸면 됩니다).
+
+**Q. 요구사항은?**
+Node 22.9 이상, 그리고 캡처용 브라우저(`npx playwright install chromium`). AI 단계까지 쓰려면 Claude Code.
+
+---
+
+## 작동 원리 (조금 더 깊이)
+
+이 시스템의 핵심은 **"무한 반복은 수렴을 보장하지 않는다 — 점수(오라클)와 종료 조건이 있어야 한다"** 입니다. 그래서:
+
+- **채점기는 측정만, 판단자는 흐름만** 정합니다. 끝낼지 말지는 사람이 정한 점수 기준·최대 횟수로 결정(AI 재량 아님).
+- **비교 기준은 원본이 아니라 "도출된 디자인"** 입니다. 원본을 계속 좇으면 베끼기로 회귀하므로, 루프는 우리가 만든 `design/` 명세와 비교합니다.
+- 채점 항목은 **플러그인**입니다(레이아웃·색·글꼴은 자동 계산, 시각/완성도는 AI). 새 항목을 같은 인터페이스로 추가할 수 있습니다.
+
+설계 결정의 배경과 트레이드오프 전체는 **[`DESIGN.md`](./DESIGN.md)** 에 정리돼 있습니다.
+
+---
+
+## 스크립트 한눈에
 
 ```bash
-npm run loop -- <run> --capture-only   # 샷/computed 생산 후 멈춤
-#  → work/shots/<id>.png 를 보고 work/visual-grades.json 에 {"<id>":{"score":0~1,"notes":"…"}} 작성
-npm run loop -- <run> --score-only     # 에이전트 점수 읽어 집계 + route
-```
-
-홀리스틱 품질을 실제로 기준에 물게 하려면 `threshold` 가 아니라 컴포넌트별 `weights.visual` 을 올린다
-(결정론 신호가 보통 만점에 가까워 threshold 만으론 시각 품질을 거의 못 거른다).
-
----
-
-## Claude Code 슬래시 커맨드
-
-단계별 진입점을 슬래시 커맨드로 노출한다. 정본은 `clone-harness/commands/`, `.claude/commands/clone/` 로
-미러링되어 `/clone:` 네임스페이스로 뜬다(`/clone:01-reference …` 등). 커맨드 수정 후 미러 갱신: `npm run sync-commands`.
-
-매 단계가 부르는 `npm run …` 을 승인 없이 돌리려면 `.claude/settings.json` 의 `permissions.allow` 에 등록한다.
-
----
-
-## 스크립트
-
-```bash
-npm run new-run       -- <run>                     # 새 인스턴스 스캐폴드
-node clone-harness/scripts/reference.mjs <run> <url>  # 1단계: 레퍼런스 캡처(샷+DOM+색/폰트 신호, 팝업 닫기)
-npm run validate      -- <run>                     # 세 계약 파일 스키마 검증 (실제 게이트)
-npm run design-preview -- <run>                    # design/ → preview.html (스펙 시트, root 로 serve 해서 봄)
-npm run assemble      -- <run>                     # 조각 concat → index.html + tokens.css emit
-npm run capture       -- <run> [src|dist]          # 컴포넌트별 shot + computed 생산
-npm run score         -- <run>                     # 신호 집계 채점 → work/log.json
-npm run loop          -- <run> [--capture-only|--score-only|--audit]   # 한 바퀴 / 단계 분리 / 납품 재채점
-npm run export        -- <run> [--strip]           # src → dist (인라인·.clone-root 스코프)
-npm run serve         -- <run> [src|dist|root] [port]   # 정적 서버
+npm run new-run        -- <run>                  # 새 프로젝트 뼈대
+node clone-harness/scripts/reference.mjs <run> <url>   # 레퍼런스 캡처
+npm run design-preview -- <run>                  # 디자인 명세서(HTML) 생성
+npm run validate       -- <run>                  # 입력 파일 검증
+npm run assemble       -- <run>                  # 조각 합쳐 index.html 만들기
+npm run loop           -- <run> [--capture-only|--score-only|--audit]  # 측정→채점→결정 한 바퀴
+npm run export         -- <run>                  # 카페24용 조각 뽑기
+npm run serve          -- <run> [src|dist|root] [port]   # 로컬 서버
 ```
 
 ---
 
-## 디렉터리
+## 라이선스
 
-```
-clone-harness/                # 재사용 엔진
-├── lib/                      # 공통 계약 (paths, tokens, color, validate, log)
-├── scripts/                  # assemble · serve · capture · score · export · reference · design-preview · new-run
-├── signals/                  # 신호 플러그인 (layout · color · typo · pixel · visual) — 동일 인터페이스
-├── judge/                    # 판단자: route(결정론) + loop(오케스트레이터)
-├── schemas/                  # JSON Schema 게이트 3종 (design-system · components · config)
-├── commands/                 # 단계별 진입점 (00~07 + 02-review)
-└── config.default.json       # 엔진 기본값 (viewport·임계치·가중치·신호 레지스트리)
-
-runs/<name>/                  # 1회 실행 = 인스턴스
-├── reference/                # 1번: source.png · dom.html · signals.json · brief.md  (채점 정답지 아님)
-├── design/                   # 2번: design-system.json · components.json  ← 척추(채점 정답지)
-├── src/                      # 3번: components/*.html · styles.css · interactions.js · assets/  (+ 생성물 index.html·tokens.css)
-├── work/                     # 루프 상태: shots/ · log.json · visual-grades.json
-├── dist/                     # 납품: fragment.html · fragment.audit.html
-└── config.json               # 이 프로젝트의 임계치·가중치·신호 토글 override
-```
-
-`work/`·`dist/`·생성물(`index.html`·`tokens.css`·`preview.html`)은 `.gitignore` 로 제외 — 매 회차 다시 만든다.
-
----
-
-## 신호 추가 (확장 이음새)
-
-`signals/*.mjs` 는 모두 동일 시그니처:
-
-```js
-export async function run({ shot, computed, spec, tokens, config }) {
-  // shot     : 이 컴포넌트 스크린샷 경로
-  // computed : capture 가 뽑은 getComputedStyle·boundingBox 트리(루트+직계+손자, 2-depth)
-  // spec     : components.json 의 이 컴포넌트 객체
-  // tokens   : design-system.json 에서 resolve 된 실제 값
-  return { score: 0.0 /* 0~1, 또는 null = 측정 불가(집계 제외) */, detail: {}, notes: '한 줄 수선 힌트' };
-}
-```
-
-새 신호는 (1) `signals/<name>.mjs` 추가, (2) `config.signals.<name>` 레지스트리 등록, (3) `weights.<name>` 부여.
-시각 채점기도 특별취급 없이 "신호 하나"일 뿐이다.
-
----
-
-## 예제(PHYTOTECH)에 쓴 무료 자산
-
-`runs/phytotech-cafe24` 는 외부 무료 소스를 임베드해 만들었다(모두 키 불필요):
-
-- **아이콘** — [Lucide](https://lucide.dev) via [Iconify API](https://iconify.design)(`api.iconify.design/lucide/<icon>.svg`). ISC/MIT, 상업적 사용 가능.
-- **제품 이미지** — [Pollinations.ai](https://pollinations.ai) 로 생성해 `src/assets/` 에 **자체호스팅**.
-
-> ⚠️ 예제 이미지는 AI 생성물이고 무료 티어라 상표/워터마크 리스크가 있다. **실제 상업 운영 전 진짜 제품 촬영컷으로 교체**하라
-> (슬롯·구조는 그대로 두고 URL 만 교체). 레퍼런스 캡처(`reference/source.png` 등)는 분석용일 뿐 납품물이 아니다.
-
----
-
-## 라이선스 / 주의
-
-- 엔진 코드는 자유롭게 사용. 외부 자산(아이콘·이미지·웹폰트)·레퍼런스 캡처는 각 출처의 라이선스를 따른다.
-- 이 시스템은 **픽셀 1:1 복제가 아니라 UI/UX 재해석**을 목표로 한다(원칙 1-2). 타사 디자인을 그대로 베끼는 용도가 아니다.
+[MIT](./LICENSE). 단, 예제가 쓰는 외부 자산(아이콘·생성 이미지·웹폰트·레퍼런스 캡처)은 각 출처의 라이선스를 따릅니다.
+이 도구는 타사 디자인의 1:1 복제가 아니라 **재해석**을 목적으로 합니다.
