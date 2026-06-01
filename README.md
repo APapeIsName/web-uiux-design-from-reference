@@ -8,9 +8,9 @@
 > **레퍼런스 사이트 → 디자인 분석·재해석 → HTML/CSS 구현 → AI가 "잘 맞는지" 점수 매겨 반복 수정 → 카페24용 HTML 조각**
 
 <p align="center">
-  <img src="docs/preview-fold.png" alt="PHYTOTECH 예제 — autowash.co.kr UI/UX를 건강기능식품 브랜드로 재해석" width="840">
+  <img src="docs/demo.gif" alt="PHYTOTECH 데모 — 히어로 캐러셀 + 전체 페이지 스크롤" width="760">
   <br>
-  <em>예제 결과: 자동차용품몰 autowash.co.kr 의 UI/UX 느낌을 가상 건강기능식품 브랜드 PHYTOTECH 로 재해석</em>
+  <em>예제 결과 데모 — 자동차용품몰 autowash.co.kr 의 UI/UX 느낌을 가상 건강기능식품 브랜드 PHYTOTECH 로 재해석 (히어로 캐러셀 + 스크롤)</em>
 </p>
 
 - 🎨 **베끼는 게 아닙니다.** 픽셀을 그대로 복제하는 게 아니라, 레이아웃·색·타이포·정보 밀도 같은 *느낌*을 가져와 **다른 브랜드로 재해석**합니다.
@@ -39,6 +39,8 @@
 
 이 저장소에는 **완성된 예제**가 들어 있습니다: `runs/phytotech-cafe24/`
 — 자동차용품 쇼핑몰 [autowash.co.kr](https://autowash.co.kr/) 의 UI/UX를, 가상의 건강기능식품 브랜드 **PHYTOTECH** 로 재해석한 풀 페이지입니다.
+
+<p align="center"><img src="docs/preview-fold.png" alt="PHYTOTECH 첫 화면(정지 이미지)" width="760"></p>
 
 직접 브라우저로 보려면:
 
@@ -153,7 +155,9 @@ Node 22.9 이상, 그리고 캡처용 브라우저(`npx playwright install chrom
 - **비교 기준은 원본이 아니라 "도출된 디자인"** 입니다. 원본을 계속 좇으면 베끼기로 회귀하므로, 루프는 우리가 만든 `design/` 명세와 비교합니다.
 - 채점 항목은 **플러그인**입니다(레이아웃·색·글꼴은 자동 계산, 시각/완성도는 AI). 새 항목을 같은 인터페이스로 추가할 수 있습니다.
 
-설계 결정의 배경과 트레이드오프 전체는 **[`DESIGN.md`](./DESIGN.md)** 에 정리돼 있습니다.
+**[`DESIGN.md`](./DESIGN.md) 는 이 하네스(clone-harness)의 설계 문서입니다** — 위 원칙, 단계별 계약(스키마),
+6단계 파이프라인을 왜 이렇게 설계했는지(배경·트레이드오프·의도적으로 안 한 것)를 정리해 둔 곳입니다.
+특정 프로젝트 문서가 아니라 **엔진 자체의 설계 근거**입니다.
 
 ---
 
