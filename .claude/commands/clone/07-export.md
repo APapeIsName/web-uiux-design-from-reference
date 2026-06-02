@@ -14,3 +14,10 @@ argument-hint: <run-name>
    - 에디터가 `<script>`/data 속성을 살려주는지 사전 "2분 테스트". script 잘리면 인라인, 그래도 안 되면 CSS-only 후퇴.
 
 이게 마지막 게이트. 재채점이 통과해야 납품한다.
+
+## 납품 어댑터 선택 (`config.export.adapter`)
+- **`cafe24-fragment`**(기본): 위 흐름 — 에디터에 통째로 붙이는 단일 정적 조각.
+- **`cafe24-skin`**: 카페24 실제 스킨에 얹는 디자인 레이어. `npm run export -- $ARGUMENTS --adapter=cafe24-skin` →
+  `dist/skin/`에 tokens.css + skin.css(카페24 클래스 `prdList__item`·`thumbnail`·`name`·`badge`·`spec .price` 타깃) +
+  product/list_product.html(모듈 마크업) + mockup.html(채점/미리보기 트윈) + INTEGRATION.md.
+  상품 그리드는 카페24 서버 모듈이 실제 상품으로 채우고 skin.css 가 디자인을 입힌다. 채점은 mockup.html 트윈으로(원칙 1-5).

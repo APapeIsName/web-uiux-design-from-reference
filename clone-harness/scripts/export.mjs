@@ -10,6 +10,7 @@ import { validateFile } from '../lib/validate.mjs';
 // 내장 어댑터(엔진 루트 기준 경로). config.export.adapters 로 덮어쓰기/추가 가능.
 const BUILTIN_ADAPTERS = {
   'cafe24-fragment': 'export/cafe24-fragment.mjs',
+  'cafe24-skin': 'export/cafe24-skin.mjs',
 };
 
 export async function runExport(runName, opts = {}) {

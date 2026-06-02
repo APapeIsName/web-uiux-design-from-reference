@@ -14,7 +14,8 @@
   "export": {
     "adapter": "cafe24-fragment",
     "adapters": {
-      "cafe24-fragment": "export/cafe24-fragment.mjs"
+      "cafe24-fragment": "export/cafe24-fragment.mjs",
+      "cafe24-skin": "export/cafe24-skin.mjs"
     }
   }
 }

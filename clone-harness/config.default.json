@@ -13,6 +13,9 @@
   "judge": { "stallWindow": 3, "minDelta": 0.01 },
   "export": {
     "adapter": "cafe24-fragment",
-    "adapters": { "cafe24-fragment": "export/cafe24-fragment.mjs" }
+    "adapters": {
+      "cafe24-fragment": "export/cafe24-fragment.mjs",
+      "cafe24-skin": "export/cafe24-skin.mjs"
+    }
   }
 }

@@ -138,7 +138,7 @@ runs/<이름>/              # 프로젝트 1개 = 폴더 1개
 |---|---|---|
 | **측정·채점·루프** | 렌더된 화면(DOM) 캡처 → 점수 → 다음 행동 결정 | **프레임워크 무관** — React/Vue/Svelte 결과물도 원리상 그대로 채점 |
 | **작성(authoring)** | 컴포넌트 구현 → 페이지 조립 | 현재 **순수 HTML/CSS/JS** (`scripts/assemble.mjs`) |
-| **납품(delivery)** | 결과를 배포 포맷으로 변환 | **교체 가능한 어댑터** (`config.export.adapter`) — `cafe24-fragment`(현재 기본·단일 조각), `cafe24-skin`(스킨 섹션·예정) |
+| **납품(delivery)** | 결과를 배포 포맷으로 변환 | **교체 가능한 어댑터** (`config.export.adapter`) — `cafe24-fragment`(기본·단일 정적 조각), `cafe24-skin`(카페24 실제 클래스 타깃 CSS + 모듈 마크업 + 목업 트윈) |
 
 - 채점은 Playwright 가 *렌더된 DOM* 의 `data-component`·computed style·스크린샷을 보고 합니다. 즉 **무엇으로 만들었든 화면만 뜨면** 채점됩니다. 디자인 명세(`design/`)와 채점 루프는 작성·납품 방식과 무관합니다.
 - 그래서 **다른 프레임워크**(React/Next·Vue·Svelte 등)나 **다른 납품 타깃**(완전한 HTML 페이지·워드프레스·정적 사이트·이메일 등)은 *작성/납품 어댑터만 추가*하면 됩니다 — 예: `serve` 를 Vite/Next dev 서버로 바꾸고 컴포넌트 루트에 `data-component` 만 유지.
