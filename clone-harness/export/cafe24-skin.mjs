@@ -112,16 +112,32 @@ ${body}
 - tokens.css : 디자인 토큰(CSS 변수, .ph-skin 스코프)
 - skin.css   : (A) 런의 디자인 CSS(.ph-skin 재스코프) + (B) 카페24 표준 클래스(prdList__item·thumbnail·name·badge·spec .price) 타깃
 - product/list_product.html : 상품 그리드 모듈 마크업(서버가 {$변수}로 실제 상품 채움)
-- mockup.html : 채점/미리보기 트윈 — 이 런의 9개 컴포넌트 전체를 .ph-skin 스코프로 렌더(정적)
+- mockup.html : 채점/미리보기 트윈 — 이 런의 컴포넌트 전체를 .ph-skin 스코프로 렌더(정적)
 
-## 적용
-1. tokens.css + skin.css 를 스킨에 추가(예: layout/basic/css/ 에 두고 \`<!--@css(...)-->\` 로 로드).
+## 적용(기본)
+1. tokens.css + skin.css 를 스킨에 추가(예: layout/basic/css/ 에 두고 \`<!--@css(...)-->\` 로 로드). phyto CSS 는 스킨 CSS '뒤'(마지막)에 로드해야 캐스케이드 우선.
 2. 스킨 본문/섹션을 \`<div class="ph-skin"> … </div>\` 로 감싼다(전역 충돌 방지).
 3. 상품 그리드는 카페24 모듈 그대로(클래스 .prdList__item/.thumbnail/.name/.badge/.spec .price) → skin.css 가 디자인을 입힘. 실제 상품은 서버가 채운다.
 
+## 실전 매핑 플레이북 (실제 운영 스킨에 통합할 때 — 중요)
+이 어댑터의 skin.css(B) 는 '카페24 표준 상품 클래스'를 가정한 출발점이다. 실제 스킨은 자기 고유 클래스/구조를 쓰므로
+헤더·푸터·내비·플로팅·배너는 표준 클래스 가정만으로는 입혀지지 않는다. 다음을 지킨다(색·타이포·배지만, 레이아웃은 스킨 그대로):
+
+1. 표준 클래스 가정 금지 → 영역별 실제 마크업에 매핑. 대상 스킨 HTML 을 열어 실제 클래스
+   (예: #header, .top_category, #footer, .bt_util, #quick, .pageTop, main_3dan_banner, .main_banner_txt01 …)를 확인하고
+   영역별 phyto-<area>.css 로 .ph-skin 스코프 타깃을 직접 작성한다.
+2. 레이아웃 파일이 여러 개일 수 있다 → 컴포넌트가 렌더되는 레이아웃마다 @css 배선.
+   예: 메인/리스트=layout.html, 상세=detail_layout.html. 플로팅(quick)이 detail_layout 에서만 @import 되면 그 CSS·토큰을 detail_layout 에도 로드.
+3. 스마트디자인(ez) 인라인 스타일 주의 → 외부 CSS를 덮는다. ez 에디터가 박은 인라인 color/font-weight 가 우선하므로
+   !important 로 소리없이 싸우지 말고, 잠긴 속성은 미선언 + '어드민에서 인라인 서식 제거'로 가이드한다.
+4. 스마트배너 슬롯(@import 외부 배너)·이미지는 어드민 전용 → 스킨 CSS로 제어 불가.
+   배너는 '스타일 가능한 텍스트/CTA 클래스'만 재스킨하고, 이미지·카피는 어드민 운영 가이드로 넘긴다.
+
+→ 실제 사례: docs/CASE-STUDY-cafe24-skin3.md (PHYTOTECH → 운영 skin3 통합: header·footer·category·floating·banner).
+
 ## 채점(원칙 1-5)
 - 납품물은 {$변수} 모듈이라 카페24 서버에서만 렌더 → 로컬 채점은 mockup.html 트윈으로.
-- \`config.export.adapter\`를 "cafe24-skin"으로 두고 \`npm run loop -- ${runName} --audit\` → 9개 컴포넌트 전부 재채점.
+- \`config.export.adapter\`를 "cafe24-skin"으로 두고 \`npm run loop -- ${runName} --audit\` → 컴포넌트 전부 재채점.
 `;
   fs.writeFileSync(path.join(skinDir, 'INTEGRATION.md'), guide, 'utf8');
 
