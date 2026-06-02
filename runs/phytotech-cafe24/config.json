@@ -10,5 +10,11 @@
     "pixel":      { "module": "signals/pixel.mjs",  "enabled": false },
     "visual":     { "module": "signals/visual.mjs", "enabled": true, "provider": "agent", "model": "claude-sonnet-4-6" }
   },
-  "judge": { "stallWindow": 3, "minDelta": 0.01 }
+  "judge": { "stallWindow": 3, "minDelta": 0.01 },
+  "export": {
+    "adapter": "cafe24-fragment",
+    "adapters": {
+      "cafe24-fragment": "export/cafe24-fragment.mjs"
+    }
+  }
 }

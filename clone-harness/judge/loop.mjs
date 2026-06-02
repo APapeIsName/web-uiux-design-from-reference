@@ -11,7 +11,7 @@ import { readLog } from '../lib/log.mjs';
 import { assemble } from '../scripts/assemble.mjs';
 import { captureAll } from '../scripts/capture.mjs';
 import { scoreAll } from '../scripts/score.mjs';
-import { exportFragment } from '../scripts/export.mjs';
+import { runExport } from '../scripts/export.mjs';
 import { route } from './route.mjs';
 
 function printScores(entries) {
@@ -103,9 +103,9 @@ export async function loopOnce(runName) {
 export async function auditRescore(runName) {
   const { components, config } = validateRun(runName);
   console.log(`\n══ audit re-score ${runName} ══════════`);
-  const r = exportFragment(runName);
-  console.log(`  export: ${path.basename(r.fragment)}, ${path.basename(r.audit)}`);
-  const manifest = await captureAll(runName, { which: 'dist' });
+  const r = await runExport(runName);
+  console.log(`  export [${r.adapter}]: ${(r.outputs || []).map((o) => path.basename(o.path)).join(', ')}`);
+  const manifest = await captureAll(runName, { which: 'dist', entry: r.auditEntry });
   const capErrors = manifest.filter((m) => m.error);
   if (capErrors.length) {
     console.error('\n재채점 캡처 실패 — export 가 data-component 를 떨궜는지 확인:');

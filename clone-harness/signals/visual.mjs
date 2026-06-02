@@ -1,6 +1,8 @@
 // 시각 신호 — holistic 만(위계·여백 리듬·전체 충실도 등 숫자로 환원 안 되는 것).
 // 특별취급 없이 "신호 하나"(DESIGN 5/7). 누가 그 측정을 수행하느냐는 provider 로 교체 가능(재사용 이음새):
-//   - "agent"(기본): Claude Code 에이전트가 샷을 보고 work/visual-grades.json 에 쓴 점수를 읽는다. API 키 불필요.
+//   - "agent"(기본): **독립 채점관**이 샷을 보고 work/visual-grades.json 에 쓴 점수를 읽는다. API 키 불필요.
+//       ⚠️ 측정자 ≠ 구현자(원칙 1-1). 컴포넌트를 구현한 에이전트가 자기 작업을 채점하면 편향이 생긴다.
+//       그래서 채점은 grade-visual 워크플로(구현 맥락 없는 독립 서브에이전트들)가 채운다. 구현 에이전트가 직접 점수를 쓰지 말 것.
 //   - "api"        : Anthropic SDK 직접 호출(ANTHROPIC_API_KEY 필요). 사람/에이전트 없는 자율 실행용.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -17,7 +19,7 @@ function clampScore(s) {
   return Math.max(0, Math.min(1, s));
 }
 
-// ── provider: agent ── 에이전트가 work/visual-grades.json 에 써둔 점수를 읽는다.
+// ── provider: agent ── 독립 채점관(구현자 ≠ 채점자, grade-visual 워크플로)이 써둔 점수를 읽는다.
 // 형식: { "<componentId>": { "score": 0~1, "notes": "..." }, ... }
 function runAgent({ spec, config }) {
   const work = config?._run?.paths?.work;

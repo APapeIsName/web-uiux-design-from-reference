@@ -10,10 +10,14 @@ argument-hint: <run-name>
 - visual `enabled:false`: 결정론 신호만. → B 흐름.
 
 ### A. visual=agent (키 없이, 기본)
+⚠️ **측정자 ≠ 구현자(원칙 1-1).** 컴포넌트를 구현한 너(에이전트)가 자기 작업을 채점하면 편향이 생긴다.
+그래서 visual 채점은 **독립 채점관 서브에이전트**(구현 맥락 없음)에게 맡긴다. **직접 점수를 쓰지 말 것.**
+
 한 회차:
 1. `npm run loop -- $ARGUMENTS --capture-only` — assemble + capture(샷/computed 생산) 후 멈춤.
-2. `runs/$ARGUMENTS/work/shots/<id>.png` 를 **각각 Read 해서 holistic 채점**(위계·여백 리듬·정렬·완성도만; 색/폰트/치수는 결정론 신호 담당). 결과를 `runs/$ARGUMENTS/work/visual-grades.json` 에:
-   `{ "<id>": { "score": 0~1, "notes": "한 줄 수선 힌트" }, ... }`
+2. **독립 채점** — `Workflow({ scriptPath: "clone-harness/workflows/grade-visual.mjs", args: { runName: "$ARGUMENTS" } })`:
+   - 워크플로가 `grade-inputs.mjs` 로 입력을 모으고, 컴포넌트별 **독립 서브에이전트**가 샷을 Read 해 0~1 채점한다(각자 구현 대화를 모르는 새 컨텍스트 → 자기 채점 편향 제거).
+   - 돌려받은 `grades`(=`[{id,score,notes}]`)를 **그대로** `runs/$ARGUMENTS/work/visual-grades.json` 의 `{ "<id>": { "score", "notes" } }` 로 기록한다. 점수를 직접 만들거나 수정하지 말 것 — 너는 전달자일 뿐.
 3. `npm run loop -- $ARGUMENTS --score-only` — visual 신호가 위 점수를 읽어 집계 + route 결정 출력.
 4. 결정대로:
    - **continue** → 출력된 타깃의 `axes.notes` 를 읽고 `src/components/<id>.html`(필요시 styles.css) 수정 → 1로.

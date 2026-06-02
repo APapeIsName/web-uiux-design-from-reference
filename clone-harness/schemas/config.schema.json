@@ -63,6 +63,19 @@
           "description": "유효 진전으로 칠 최소 aggregate 개선폭. 시각 jitter 보다 위로."
         }
       }
+    },
+    "export": {
+      "type": "object",
+      "description": "납품 어댑터 선택(교체 가능). 없으면 cafe24-fragment 기본.",
+      "additionalProperties": false,
+      "properties": {
+        "adapter": { "type": "string", "description": "사용할 어댑터 id (예: cafe24-fragment, cafe24-skin)" },
+        "adapters": {
+          "type": "object",
+          "description": "어댑터 id → 엔진 루트 기준 모듈 경로",
+          "additionalProperties": { "type": "string" }
+        }
+      }
     }
   }
 }

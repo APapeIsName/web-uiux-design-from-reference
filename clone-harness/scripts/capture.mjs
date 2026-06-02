@@ -79,7 +79,7 @@ async function captureComponent(page, spec, outDir) {
  * 한 run 의 모든 컴포넌트를 캡처. 자체적으로 정적 서버를 띄웠다 닫는다.
  * which: 'src'(개발 index.html) | 'dist'(fragment.audit.html 재채점) — DESIGN 1-5.
  */
-export async function captureAll(runName, { which = 'src' } = {}) {
+export async function captureAll(runName, { which = 'src', entry } = {}) {
   const p = runPaths(runName);
   const config = validateFile('config', p.config);
   const { components } = validateFile('components', p.componentsJson);
@@ -87,14 +87,14 @@ export async function captureAll(runName, { which = 'src' } = {}) {
   fs.mkdirSync(p.shots, { recursive: true });
 
   const serveDir = which === 'dist' ? p.dist : p.src;
-  const entry = which === 'dist' ? 'fragment.audit.html' : 'index.html';
+  const entryFile = entry || (which === 'dist' ? 'fragment.audit.html' : 'index.html');
   const { url, close } = await startServer(serveDir);
 
   const browser = await chromium.launch();
   const manifest = [];
   try {
     const page = await browser.newPage({ viewport: config.viewport });
-    await page.goto(`${url}/${entry}`, { waitUntil: 'load' });
+    await page.goto(`${url}/${entryFile}`, { waitUntil: 'load' });
     await stabilize(page);
     for (const c of components) {
       manifest.push(await captureComponent(page, c, p.shots));
