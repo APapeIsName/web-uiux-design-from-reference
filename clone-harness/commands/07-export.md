@@ -20,4 +20,6 @@ argument-hint: <run-name>
 - **`cafe24-skin`**: 카페24 실제 스킨에 얹는 디자인 레이어. `npm run export -- $ARGUMENTS --adapter=cafe24-skin` →
   `dist/skin/`에 tokens.css + skin.css(카페24 클래스 `prdList__item`·`thumbnail`·`name`·`badge`·`spec .price` 타깃) +
   product/list_product.html(모듈 마크업) + mockup.html(채점/미리보기 트윈) + INTEGRATION.md.
-  상품 그리드는 카페24 서버 모듈이 실제 상품으로 채우고 skin.css 가 디자인을 입힌다. 채점은 mockup.html 트윈으로(원칙 1-5).
+  상품 그리드는 카페24 서버 모듈이 실제 상품으로 채우고 skin.css 가 디자인을 입힌다.
+  mockup.html 은 이 run 의 **9개 컴포넌트 전체**를 `.ph-skin` 스코프로 옮긴 채점 트윈 — `config.export.adapter`를 cafe24-skin 으로 두고
+  `npm run loop -- $ARGUMENTS --audit` 하면 9개 전부 재채점해 "채점한 것 = 올리는 것"을 닫는다(원칙 1-5).
